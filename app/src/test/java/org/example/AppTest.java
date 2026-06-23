@@ -4,11 +4,228 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+
+    // ------------------------------------------------------------------
+    // add tests
+    // ------------------------------------------------------------------
+    @Test
+    void addReturnsSumForPositiveIntegers() {
+        assertEquals(7, App.add(3, 4), "3 + 4 should equal 7");
+        assertEquals(100, App.add(40, 60), "40 + 60 should equal 100");
+    }
+
+    @Test
+    void addReturnsSumForNegativeIntegers() {
+        assertEquals(-5, App.add(-2, -3), "-2 + -3 should equal -5");
+        assertEquals(-1, App.add(2, -3), "2 + -3 should equal -1");
+    }
+
+    @Test
+    void addReturnsZeroForZeros() {
+        assertEquals(0, App.add(0, 0), "0 + 0 should equal 0");
+        assertEquals(5, App.add(5, 0), "5 + 0 should equal 5");
+        assertEquals(-5, App.add(0, -5), "0 + -5 should equal -5");
+    }
+
+    @Test
+    void addHandlesIntegerBoundaryValues() {
+        assertEquals(Integer.MAX_VALUE, App.add(Integer.MAX_VALUE, 0), "MAX_VALUE + 0 should equal MAX_VALUE");
+        assertEquals(Integer.MIN_VALUE, App.add(Integer.MIN_VALUE, 0), "MIN_VALUE + 0 should equal MIN_VALUE");
+        assertEquals(-1, App.add(Integer.MAX_VALUE, Integer.MIN_VALUE), "MAX_VALUE + MIN_VALUE should equal -1");
+    }
+
+    @Test
+    void addWrapsOnIntegerOverflow() {
+        assertEquals(Integer.MIN_VALUE, App.add(Integer.MAX_VALUE, 1), "MAX_VALUE + 1 should overflow to MIN_VALUE");
+        assertEquals(Integer.MAX_VALUE, App.add(Integer.MIN_VALUE, -1), "MIN_VALUE + -1 should overflow to MAX_VALUE");
+    }
+
+    // ------------------------------------------------------------------
+    // isPrime tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void isPrimeReturnsFalseForNumbersLessThanTwo() {
+        assertFalse(App.isPrime(-10), "Negative numbers are not prime");
+        assertFalse(App.isPrime(-1), "Negative numbers are not prime");
+        assertFalse(App.isPrime(0), "0 is not prime");
+        assertFalse(App.isPrime(1), "1 is not prime");
+    }
+
+    @Test
+    void isPrimeReturnsTrueForSmallPrimes() {
+        assertTrue(App.isPrime(2), "2 is prime");
+        assertTrue(App.isPrime(3), "3 is prime");
+        assertTrue(App.isPrime(5), "5 is prime");
+        assertTrue(App.isPrime(7), "7 is prime");
+        assertTrue(App.isPrime(13), "13 is prime");
+        assertTrue(App.isPrime(17), "17 is prime");
+    }
+
+    @Test
+    void isPrimeReturnsFalseForSmallComposites() {
+        assertFalse(App.isPrime(4), "4 is not prime");
+        assertFalse(App.isPrime(9), "9 is not prime");
+        assertFalse(App.isPrime(15), "15 is not prime");
+        assertFalse(App.isPrime(21), "21 is not prime");
+        assertFalse(App.isPrime(25), "25 is not prime");
+    }
+
+    @Test
+    void isPrimeDetectsPerfectSquaresAndLargeEvenNumbers() {
+        assertFalse(App.isPrime(16), "16 is not prime");
+        assertFalse(App.isPrime(49), "49 is not prime");
+        assertFalse(App.isPrime(100), "100 is not prime");
+    }
+
+    @Test
+    void isPrimeHandlesLargerValues() {
+        assertTrue(App.isPrime(104729), "104729 should be prime");
+        assertFalse(App.isPrime(104730), "104730 should not be prime");
+    }
+
+    // ------------------------------------------------------------------
+    // reverse tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void reverseReturnsReversedString() {
+        assertEquals("dcba", App.reverse("abcd"), "reverse should return the string backwards");
+        assertEquals("!dlroW ,olleH", App.reverse("Hello, World!"), "reverse should preserve non-letter characters");
+    }
+
+    @Test
+    void reverseHandlesEmptyString() {
+        assertEquals("", App.reverse(""), "reverse of empty string should be empty");
+    }
+
+    // ------------------------------------------------------------------
+    // factorial tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void factorialReturnsCorrectValue() {
+        assertEquals(1, App.factorial(0), "0! should equal 1");
+        assertEquals(1, App.factorial(1), "1! should equal 1");
+        assertEquals(120, App.factorial(5), "5! should equal 120");
+    }
+
+    @Test
+    void factorialThrowsForNegativeInput() {
+        assertThrows(IllegalArgumentException.class, () -> App.factorial(-1), "factorial of a negative number should throw");
+    }
+
+    // ------------------------------------------------------------------
+    // isPalindrome tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void isPalindromeReturnsTrueForPalindromicPhrases() {
+        assertTrue(App.isPalindrome("A man, a plan, a canal, Panama"));
+        assertTrue(App.isPalindrome("racecar"));
+    }
+
+    @Test
+    void isPalindromeReturnsFalseForNonPalindromes() {
+        assertFalse(App.isPalindrome("OpenAI"), "non-palindromic strings should return false");
+    }
+
+    @Test
+    void isPalindromeTreatsEmptyStringAsPalindrome() {
+        assertTrue(App.isPalindrome(""), "empty string should be treated as a palindrome");
+    }
+
+    // ------------------------------------------------------------------
+    // fibonacciUpTo tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void fibonacciUpToReturnsSequenceIncludingZero() {
+        assertIterableEquals(Arrays.asList(0, 1, 1), App.fibonacciUpTo(1), "fibonacciUpTo(1) should return [0, 1, 1]");
+        assertIterableEquals(Arrays.asList(0, 1, 1, 2, 3, 5, 8), App.fibonacciUpTo(8), "fibonacciUpTo(8) should return the correct sequence");
+    }
+
+    @Test
+    void fibonacciUpToThrowsForNegativeInput() {
+        assertThrows(IllegalArgumentException.class, () -> App.fibonacciUpTo(-1), "negative input should throw");
+    }
+
+    // ------------------------------------------------------------------
+    // charFrequency tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void charFrequencyCountsCharactersAccurately() {
+        Map<Character, Integer> expected = new HashMap<>();
+        expected.put('h', 1);
+        expected.put('e', 1);
+        expected.put('l', 2);
+        expected.put('o', 1);
+        assertEquals(expected, App.charFrequency("hello"));
+    }
+
+    @Test
+    void charFrequencyReturnsEmptyMapForEmptyString() {
+        assertTrue(App.charFrequency("").isEmpty(), "empty input should return an empty frequency map");
+    }
+
+    // ------------------------------------------------------------------
+    // isAnagram tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void isAnagramReturnsTrueForValidAnagrams() {
+        assertTrue(App.isAnagram("Listen", "Silent"), "anagram detection should ignore case and whitespace");
+        assertTrue(App.isAnagram("Conversation", "Voices rant on"));
+    }
+
+    @Test
+    void isAnagramReturnsFalseForNonAnagrams() {
+        assertFalse(App.isAnagram("hello", "world"), "non-anagrams should return false");
+    }
+
+    // ------------------------------------------------------------------
+    // average tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void averageComputesCorrectAverage() {
+        assertEquals(2.5, App.average(new int[]{2, 3}), 1e-9, "average of [2, 3] should equal 2.5");
+        assertEquals(0.0, App.average(new int[]{-2, 2}), 1e-9, "average of [-2, 2] should equal 0.0");
+    }
+
+    @Test
+    void averageThrowsForEmptyArray() {
+        assertThrows(IllegalArgumentException.class, () -> App.average(new int[]{}), "empty array should throw");
+    }
+
+    // ------------------------------------------------------------------
+    // filterEvens tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void filterEvensReturnsOnlyEvenNumbers() {
+        assertEquals(Arrays.asList(0, 2, -4), App.filterEvens(Arrays.asList(0, 1, 2, -4, 5)), "filterEvens should keep only even numbers");
+    }
+
+    @Test
+    void filterEvensReturnsEmptyListForNoEvens() {
+        assertTrue(App.filterEvens(Arrays.asList(1, 3, 5)).isEmpty(), "list with no evens should return an empty list");
+    }
+
+    // ------------------------------------------------------------------
+    // mostCommonWord tests
+    // ------------------------------------------------------------------
+
+    @Test
+    void mostCommonWordReturnsMostFrequentWord() {
+        assertEquals("apple", App.mostCommonWord("apple banana apple cherry apple"), "most common word should be apple");
+        assertEquals("hello", App.mostCommonWord("Hello, hello world!"), "most common word should ignore case and punctuation");
     }
 }
