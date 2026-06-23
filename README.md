@@ -18,7 +18,7 @@
 
 ---
 
-### ### שלב 1: שכפול הפרויקט (Clone)
+### שלב 1: שכפול הפרויקט (Clone)
 העתיקו והריצו את הפקודה הבאה בטרמינל כדי לשכפל את המאגר מ-GitHub למחשבכם האישי:
 ```bash
 git clone https://github.com/ariel-levin/26b-10142-unittesting-ariel-levin.git
